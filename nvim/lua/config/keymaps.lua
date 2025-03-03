@@ -17,3 +17,19 @@ keymap.set("c", "<C-j>", "<Down>")
 -- resize window height
 keymap.set("n", "<D-Up>", "<cmd>resize +2<cr>")
 keymap.set("n", "<D-Down>", "<cmd>resize -2<cr>")
+
+-- remove marks
+keymap.set("n", "<leader>md", function()
+  vim.cmd("delmarks " .. vim.fn.nr2char(vim.fn.getchar()))
+end, { desc = "Remove mark" })
+
+keymap.set("n", "<leader>ma", "<cmd>delmarks A-Za-z0-9<cr>", { desc = "Delete all marks" })
+
+-- Clear output in iex including scrollback
+keymap.set("n", "<leader>``", function()
+  local sb = vim.bo.scrollback
+  vim.bo.scrollback = 1
+  vim.fn.chansend(vim.bo.channel, { "clear\r\n" })
+  vim.bo.scrollback = sb
+  vim.fn.chansend(vim.bo.channel, vim.api.nvim_replace_termcodes("clear()\r\n", true, true, true))
+end)
