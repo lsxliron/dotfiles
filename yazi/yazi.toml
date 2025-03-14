@@ -1,2 +1,4 @@
 [manager]
+show_symlink = true
 show_hidden = true
+tab_size = 2

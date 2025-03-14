@@ -1,5 +1,7 @@
-[plugin]
-deps = [{ use = "yazi-rs/plugins:smart-enter", rev = "38418dd" }]
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-enter"
+rev = "38418dd"
+hash = "20dc1361fc474934c6bf321110eb8e12"
 
 [flavor]
 deps = []

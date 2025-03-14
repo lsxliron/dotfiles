@@ -31,5 +31,5 @@ keymap.set("n", "<leader>``", function()
   vim.bo.scrollback = 1
   vim.fn.chansend(vim.bo.channel, { "clear\r\n" })
   vim.bo.scrollback = sb
-  vim.fn.chansend(vim.bo.channel, vim.api.nvim_replace_termcodes("clear()\r\n", true, true, true))
+  -- vim.fn.chansend(vim.bo.channel, vim.api.nvim_replace_termcodes("clear()\r\n", true, true, true))
 end)
