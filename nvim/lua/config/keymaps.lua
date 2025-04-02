@@ -33,3 +33,28 @@ keymap.set("n", "<leader>``", function()
   vim.bo.scrollback = sb
   -- vim.fn.chansend(vim.bo.channel, vim.api.nvim_replace_termcodes("clear()\r\n", true, true, true))
 end)
+
+-- Window management
+keymap.set("n", "<C-w>S", "<cmd>WinShift<CR>", { desc = "Enter WinShift mode" })
+
+local wk = require("which-key")
+
+local function new_note()
+  local filename = vim.fn.input("New note name: ")
+  filename = string.gsub(filename, "<", "")
+  vim.cmd("ObsidianNew " .. filename .. "<cr>")
+  print("Note " .. filename .. " created successfully")
+end
+wk.add({
+  { "<leader>o", group = "Obsidian" },
+  { "<leader>on", new_note, desc = "Create new note", mode = "n" },
+  { "<leader>ot", "<cmd>ObsidianTags<CR>", desc = "List tag", mode = "n" },
+  { "<leader>oo", "<cmd>ObsidianQuickSwitch<CR>", desc = "List notes", mode = "n" },
+  { "<leader>ow", "<cmd>ObsidianWorkspace<CR>", desc = "List workspaces", mode = "n" },
+  { "<leader>oo", "<cmd>ObsidianSearch<CR>", desc = "Search all notes", mode = "n" },
+})
+-- Obsidian
+-- keymap.set("n", "<leader>ot", "<cmd>ObsidianTags<CR>", { desc = " List tags", group = "Obsidian" })
+-- keymap.set("n", "<leader>ot", "<cmd>ObsidianQuickSwitch<CR>", { desc = "List notes" })
+-- keymap.set("n", "<leader>ow", "<cmd>ObsidianWorkspace<CR>", { desc = "List workspaces" })
+-- keymap.set("n", "<leader>os", "<cmd>ObsidianSearch<CR>", { desc = "Search in all notes" })
