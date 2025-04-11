@@ -1,4 +1,4 @@
-background-opacity = 0.95
+background-opacity = 0.90
 background-blur = true
 window-inherit-working-directory = true
 working-directory = home
