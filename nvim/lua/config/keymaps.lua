@@ -53,6 +53,11 @@ wk.add({
   { "<leader>ow", "<cmd>ObsidianWorkspace<CR>", desc = "List workspaces", mode = "n" },
   { "<leader>oo", "<cmd>ObsidianSearch<CR>", desc = "Search all notes", mode = "n" },
 })
+
+-- Copilot and Copilot CHat
+-- Reference: https://github.com/CopilotC-Nvim/CopilotChat.nvim?tab=readme-ov-file#chat-key-mappings
+vim.g.copilot_no_tab_map = true
+vim.keymap.set("i", "<S-Tab>", 'copilot#Accept("\\<S-Tab>")', { expr = true, replace_keycodes = false })
 -- Obsidian
 -- keymap.set("n", "<leader>ot", "<cmd>ObsidianTags<CR>", { desc = " List tags", group = "Obsidian" })
 -- keymap.set("n", "<leader>ot", "<cmd>ObsidianQuickSwitch<CR>", { desc = "List notes" })
