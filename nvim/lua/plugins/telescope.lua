@@ -1,5 +1,7 @@
 return {
   "nvim-telescope/telescope.nvim",
+  tag = "v0.1.9",
+  dependencies = { "nvim-lua/plenary.nvim" },
   opts = function(_, opts)
     local actions = require("telescope.actions")
     if not opts.defaults then
@@ -16,6 +18,8 @@ return {
 
     opts.defaults.mappings.i["<C-j>"] = actions.move_selection_next
     opts.defaults.mappings.i["<C-k>"] = actions.move_selection_previous
-    opts.defaults.preview = { treesitter = false }
+
+    -- Disable treesitter-based previewer if needed
+    -- opts.defaults.preview = { treesitter = false }
   end,
 }
