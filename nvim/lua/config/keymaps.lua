@@ -64,4 +64,8 @@ vim.keymap.set("i", "<S-Tab>", 'copilot#Accept("\\<S-Tab>")', { expr = true, rep
 -- keymap.set("n", "<leader>ow", "<cmd>ObsidianWorkspace<CR>", { desc = "List workspaces" })
 -- keymap.set("n", "<leader>os", "<cmd>ObsidianSearch<CR>", { desc = "Search in all notes" })
 
--- vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
+vim.keymap.set("i", "<C-L>", "<Plug>(copilot-accept-word)")
+
+--# Venn.nvim keymap
+-- toggle keymappings for venn using <leader>v
+vim.api.nvim_set_keymap("n", "<leader>v", ":lua Toggle_venn()<CR>", { noremap = true })
