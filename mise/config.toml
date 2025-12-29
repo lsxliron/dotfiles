@@ -1,0 +1,6 @@
+[tools]
+go = "1.25.5"
+python = "3.12.12"
+
+[settings]
+experimental = true
