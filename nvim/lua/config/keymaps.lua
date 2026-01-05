@@ -68,4 +68,5 @@ vim.keymap.set("i", "<C-L>", "<Plug>(copilot-accept-word)")
 
 --# Venn.nvim keymap
 -- toggle keymappings for venn using <leader>v
-vim.api.nvim_set_keymap("n", "<leader>v", ":lua Toggle_venn()<CR>", { noremap = true })
+-- vim.api.nvim_set_keymap("n", "<leader>v", ":lua Toggle_venn()<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>v", ":lua Toggle_venn()<CR>", { noremap = true, desc = "Toggle Venn.nvim" })

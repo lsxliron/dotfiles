@@ -14,6 +14,7 @@ return {
         vim.api.nvim_buf_set_keymap(0, "n", "H", "<C-v>h:VBox<CR>", { noremap = true })
         -- draw a box by pressing "f" with visual selection
         vim.api.nvim_buf_set_keymap(0, "v", "f", ":VBox<CR>", { noremap = true })
+        vim.notify("Venn enabled", vim.log.levels.INFO)
       else
         vim.cmd([[setlocal ve=block]])
         vim.api.nvim_buf_del_keymap(0, "n", "J")
@@ -22,6 +23,7 @@ return {
         vim.api.nvim_buf_del_keymap(0, "n", "H")
         vim.api.nvim_buf_del_keymap(0, "v", "f")
         vim.b.venn_enabled = nil
+        vim.notify("Venn disabled", vim.log.levels.INFO)
       end
     end
   end,
