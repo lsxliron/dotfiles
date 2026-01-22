@@ -13,5 +13,6 @@ return {
         hide_sign_column = false,
       },
     })
+    vim.keymap.set({ "n", "t" }, "<leader>ac", "<cmd>ClaudeCode<CR>", { desc = "Toggle Claude Code" })
   end,
 }
