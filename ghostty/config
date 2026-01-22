@@ -10,4 +10,4 @@ macos-titlebar-style = transparent
 copy-on-select = true
 shell-integration = bash
 copy-on-select = true
-keybind = global:ctrl+x=toggle_quick_terminal
+keybind = global:ctrl+;=toggle_quick_terminal
