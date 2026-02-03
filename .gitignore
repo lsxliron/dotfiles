@@ -19,3 +19,6 @@ truffle
 wireshark
 yarn
 yazi/plugins
+tmux/plugins
+tmux/gitmux
+cagent
