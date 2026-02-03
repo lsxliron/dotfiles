@@ -11,3 +11,5 @@ copy-on-select = true
 shell-integration = bash
 copy-on-select = true
 keybind = global:ctrl+;=toggle_quick_terminal
+command = /opt/homebrew/bin/bash
+
