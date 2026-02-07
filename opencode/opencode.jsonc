@@ -12,6 +12,13 @@
       "enabled": true,
     },
   },
+  "permission": {
+    "lsp": "allow",
+    "todoread": "allow",
+    "todowrite": "allow",
+    "*": "ask",
+  },
+
   "agent": {
     "code-reviewer": {
       "description": "Code review that should be ran before pushing code",
