@@ -95,7 +95,7 @@ keybindings:
     name: Auto Code Review
     command: >
       tmux new-window -n "PR-{{ .PrNumber }}"
-      'wt switch pr:{{ .PrNumber }} -x "opencode --agent code-reviewer --model github-copilot/gpt-5.4-mini"'
+      'wt switch pr:{{ .PrNumber }} -x "opencode --agent code-reviewer --prompt review-pr-for-branch --model github-copilot/gpt-5.4-mini"'
 repoPaths: {}
 theme:
   colors:
