@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "theme": "catppuccin",
+  "keybinds": {
+    "leader": "ctrl+n",
+    "session_rename": "ctrl+r",
+    "messages_half_page_up": "ctrl+b",
+    "messages_half_page_down": "ctrl+f"
+  },
+  "scroll_acceleration": {
+    "enabled": true
+  }
+}
