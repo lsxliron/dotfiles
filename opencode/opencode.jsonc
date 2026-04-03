@@ -20,13 +20,21 @@
       "description": "Code review that should be ran before pushing code",
       "mode": "all",
       "temperature": 0.3,
+      "prompt": "{file:./prompts/review-pr-for-branch.md}",
       "permission": {
+      "skill": {
+        "*": "ask",
+        "gh-pr-review": "allow"
+        }, 
         "read": {
           "*": "allow",
           "*.env": "deny",
           "*.env.*": "deny",
           "*.env.example": "allow",
           "mise.local.toml": "deny",
+        },
+        "glob": {
+          "*": "allow",
         },
         "grep": {
           "*": "allow",
@@ -48,7 +56,11 @@
           "git log*": "allow",
           "git rev-parse*": "allow",
           "grep *": "allow",
-          "gh api *": "allow"
+          "gh api *": "allow",
+          "gh pr *": "allow",
+          "gh check-ignore *": "allow",
+          "gh repo view *": "allow",
+          "gh pr-review *": "allow"
         }
       }
     }
