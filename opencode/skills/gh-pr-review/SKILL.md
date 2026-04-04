@@ -3,191 +3,187 @@ name: gh-pr-review
 description: View and manage inline GitHub PR review comments with full thread context from the terminal
 ---
 
-# gh-pr-review
+# How to use the GitHub API to Handle pull request reviews
 
-A GitHub CLI extension that provides complete inline PR review comment access from the terminal with LLM-friendly JSON output.
+## Required Tools
 
-## When to Use
+- GitHub CLI
 
-Use this skill when you need to:
+## Steps
 
-- View inline review comments and threads on a pull request
-- Reply to review comments programmatically
-- Resolve or unresolve review threads
-- Create and submit PR reviews with inline comments
-- Access PR review context for automated workflows
-- Filter reviews by state, reviewer, or resolution status
+1. Use the _list reviews for a pull request_ endpoint to List existing PRs submitted
+   by me by me and get the ID
+2. For every PR, use the _list comments for a pull request review_
+   endpoint to retrieve the comments for the PR. As part of your code review,
+   ensure they were handled correctly. If you find any comments that were not
+   handled correctly, use the _create a reply for a review comment_ endpoint to
+   reply to the comment and ask for clarification or suggest a change.
+3. Review the code in the PR, normally it would already be checked out to the
+   current directory and collect the comments you want to make.
+4. For replys, use the _create a reply for a review comment_ endpoint to
+   reply to the comment and ask for clarification or suggest a change.
+5. For new comments, use the _create a review for a pull request_
+   endpoint to create a review with the comments you want to make.
+   Make sure you keep the event part blank so that the review is created
+   in the `PENDING` state.
+6. To submit the review, use the _submit a review for a pull request_ endpoint
+   to submit the review and set the event to either `APPROVE`,
+   `REQUEST_CHANGES`, or `COMMENT` depending on the outcome of your code review.
 
-This tool is particularly useful for:
-- Automated PR review workflows
-- LLM-based code review agents
-- Terminal-based PR review processes
-- Getting structured review data without multiple API calls
+## Endpoints
 
-## Installation
+- List reviews for a pull request - `GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews`
+- List review comments on a pull request - `GET /repos/{owner}/{repo}/pulls/{pull_number}/comments`
+- Create a reply for a review comment - `POST /repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies`
+- Create a review for a pull request - `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews`
+- Submit a review for a pull request - `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events`
 
-First, ensure the extension is installed:
+## How to use the GitHub API to Handle pull request reviews with GitHub CLI
 
-```sh
-gh extension install agynio/gh-pr-review
+### General Help
+
+Makes an authenticated HTTP request to the GitHub API and prints the response.
+
+The endpoint argument should either be a path of a GitHub API v3 endpoint, or
+`graphql` to access the GitHub API v4.
+
+Placeholder values `{owner}`, `{repo}`, and `{branch}` in the endpoint
+argument will get replaced with values from the repository of the current
+directory or the repository specified in the `GH_REPO` environment variable.
+Note that in some shells, for example PowerShell, you may need to enclose
+any value that contains `{...}` in quotes to prevent the shell from
+applying special meaning to curly braces.
+
+The `-p/--preview` flag enables opting into previews, which are feature-flagged,
+experimental API endpoints or behaviors. The API expects opt-in via the `Accept`
+header with format `application/vnd.github.<preview-name>-preview+json` and this
+command facilitates that via `--preview <preview-name>`. To send a request for
+the corsair and scarlet witch previews, you could use `-p corsair,scarlet-witch`
+or `--preview corsair --preview scarlet-witch`.
+
+The default HTTP request method is `GET` normally and `POST` if any parameters
+were added. Override the method with `--method`.
+
+Pass one or more `-f/--raw-field` values in `key=value` format to add static string
+parameters to the request payload. To add non-string or placeholder-determined values, see
+`-F/--field` below. Note that adding request parameters will automatically switch the
+request method to `POST`. To send the parameters as a `GET` query string instead, use
+`--method GET`.
+
+The `-F/--field` flag has magic type conversion based on the format of the value:
+
+- literal values `true`, `false`, `null`, and integer numbers get converted to
+  appropriate JSON types;
+- placeholder values `{owner}`, `{repo}`, and `{branch}` get populated with values
+  from the repository of the current directory;
+- if the value starts with `@`, the rest of the value is interpreted as a
+  filename to read the value from. Pass `-` to read from standard input.
+
+For GraphQL requests, all fields other than `query` and `operationName` are
+interpreted as GraphQL variables.
+
+To pass nested parameters in the request payload, use `key[subkey]=value` syntax when
+declaring fields. To pass nested values as arrays, declare multiple fields with the
+syntax `key[]=value1`, `key[]=value2`. To pass an empty array, use `key[]` without a
+value.
+
+To pass pre-constructed JSON or payloads in other formats, a request body may be read
+from file specified by `--input`. Use `-` to read from standard input. When passing the
+request body this way, any parameters specified via field flags are added to the query
+string of the endpoint URL.
+
+In `--paginate` mode, all pages of results will sequentially be requested until
+there are no more pages of results. For GraphQL requests, this requires that the
+original query accepts an `$endCursor: String` variable and that it fetches the
+`pageInfo{ hasNextPage, endCursor }` set of fields from a collection. Each page is a separate
+JSON array or object. Pass `--slurp` to wrap all pages of JSON arrays or objects
+into an outer JSON array.
+
+For more information about output formatting flags, see `gh help formatting`.
+
+**USAGE**
+gh api <endpoint> [flags]
+
+**FLAGS**
+--cache duration Cache the response, e.g. "3600s", "60m", "1h"
+-F, --field key=value Add a typed parameter in key=value format (use "@<path>" or "@-" to read value from file or stdin)
+-H, --header key:value Add a HTTP request header in key:value format
+--hostname string The GitHub hostname for the request (default "github.com")
+-i, --include Include HTTP response status line and headers in the output
+--input file The file to use as body for the HTTP request (use "-" to read from standard input)
+-q, --jq string Query to select values from the response using jq syntax
+-X, --method string The HTTP method for the request (default "GET")
+--paginate Make additional HTTP requests to fetch all pages of results
+-p, --preview strings Opt into GitHub API previews (names should omit '-preview')
+-f, --raw-field key=value Add a string parameter in key=value format
+--silent Do not print the response body
+--slurp Use with "--paginate" to return an array of all pages of either JSON arrays or objects
+-t, --template string Format JSON output using a Go template; see "gh help formatting"
+--verbose Include full HTTP request and response in the output
+
+## Examples
+
+The examples below assume that all the commands are executed from a folder
+which contains the repository. We also assume that the PR number is 71.
+
+### Example: List reviews for a pull request
+
+```bash
+gh api /repos/{owner}/{repo}/pulls/71/reviews
 ```
 
-## Core Commands
+### Example: List review comments on a pull request
 
-### 1. View All Reviews and Threads
-
-Get complete review context with inline comments and thread replies:
-
-```sh
-gh pr-review review view -R owner/repo --pr <number>
+```bash
+gh api /repos/{owner}/{repo}/pulls/71/comments
 ```
 
-**Useful filters:**
-- `--unresolved` - Only show unresolved threads
-- `--reviewer <login>` - Filter by specific reviewer
-- `--states <APPROVED|CHANGES_REQUESTED|COMMENTED|DISMISSED>` - Filter by review state
-- `--tail <n>` - Keep only last n replies per thread
-- `--not_outdated` - Exclude outdated threads
+### Example: Create a review for a review comment
 
-**Output:** Structured JSON with reviews, comments, thread_ids, and resolution status.
+- Note that the first comment covers a range of lines, so it has both
+  `start_line` and `line` properties.
+- The second comment is a single line comment, so it only has the `line` property.
+- The response contains an `id` property we need to keep in order to
+  submit the review later.
 
-### 2. Reply to Review Threads
-
-Reply to an existing inline comment thread:
-
-```sh
-gh pr-review comments reply <pr-number> -R owner/repo \
-  --thread-id <PRRT_...> \
-  --body "Your reply message"
-```
-
-### 3. List Review Threads
-
-Get a filtered list of review threads:
-
-```sh
-gh pr-review threads list -R owner/repo <pr-number> --unresolved --mine
-```
-
-### 4. Resolve/Unresolve Threads
-
-Mark threads as resolved:
-
-```sh
-gh pr-review threads resolve -R owner/repo <pr-number> --thread-id <PRRT_...>
-```
-
-### 5. Create and Submit Reviews
-
-Start a pending review:
-
-```sh
-gh pr-review review --start -R owner/repo <pr-number>
-```
-
-Add inline comments to pending review:
-
-```sh
-gh pr-review review --add-comment \
-  --review-id <PRR_...> \
-  --path <file-path> \
-  --line <line-number> \
-  --body "Your comment" \
-  -R owner/repo <pr-number>
-```
-
-Submit the review:
-
-```sh
-gh pr-review review --submit \
-  --review-id <PRR_...> \
-  --event <APPROVE|REQUEST_CHANGES|COMMENT> \
-  --body "Overall review summary" \
-  -R owner/repo <pr-number>
-```
-
-## Output Format
-
-All commands return structured JSON optimized for programmatic use:
-
-- Consistent field names
-- Stable ordering
-- Omitted fields instead of null values
-- Essential data only (no URLs or metadata noise)
-- Pre-joined thread replies
-
-Example output structure:
-
-```json
+```bash
+gh api -X POST /repos/{owner}/{repo}/pulls/71/reviews \
+   --input - <<< '
 {
-  "reviews": [
+  "comments": [
     {
-      "id": "PRR_...",
-      "state": "CHANGES_REQUESTED",
-      "author_login": "reviewer",
-      "comments": [
-        {
-          "thread_id": "PRRT_...",
-          "path": "src/file.go",
-          "author_login": "reviewer",
-          "body": "Consider refactoring this",
-          "created_at": "2024-01-15T10:30:00Z",
-          "is_resolved": false,
-          "is_outdated": false,
-          "thread_comments": [
-            {
-              "author_login": "author",
-              "body": "Good point, will fix",
-              "created_at": "2024-01-15T11:00:00Z"
-            }
-          ]
-        }
-      ]
+      "path": ".github/workflows/build.yml",
+      "body": "I have a question about this part of the code.",
+      "start_line": 49,
+      "line": 56
+    },
+    {
+      "path": ".github/workflows/build.yml",
+      "body": "I have a question about this part of the code also.",
+      "line": 20
     }
   ]
-}
+}'
+
+# ID returned in the response: 4058659785
 ```
 
-## Best Practices
+## Example: Submit a review for a pull request
 
-1. **Always use `-R owner/repo`** to specify the repository explicitly
-2. **Use `--unresolved` and `--not_outdated`** to focus on actionable comments
-3. **Save thread_id values** from `review view` output for replying
-4. **Filter by reviewer** when dealing with specific review feedback
-5. **Use `--tail 1`** to reduce output size by keeping only latest replies
-6. **Parse JSON output** instead of trying to scrape text
+Here we use the ID from the previous example to submit the review.
+We will approve this PRs, but you can also set the event to `REQUEST_CHANGES` or `COMMENT` depending on the outcome of your code review.
 
-## Common Workflows
-
-### Get Unresolved Comments for Current PR
-
-```sh
-gh pr-review review view --unresolved --not_outdated -R owner/repo --pr $(gh pr view --json number -q .number)
+```bash
+gh api -X POST /repos/{owner}/{repo}/pulls/71/reviews/4058659785/events \
+-f body="LGTM" -f event=APPROVE
 ```
 
-### Reply to All Unresolved Comments
+## Example: Create a reply for a review comment
 
-1. Get unresolved threads: `gh pr-review threads list --unresolved -R owner/repo <pr>`
-2. For each thread_id, reply: `gh pr-review comments reply <pr> -R owner/repo --thread-id <id> --body "..."`
-3. Optionally resolve: `gh pr-review threads resolve <pr> -R owner/repo --thread-id <id>`
+We assume that the comment ID we want to reply
+to is `3035786540` and the PR number is `71`
 
-### Create Review with Inline Comments
-
-1. Start: `gh pr-review review --start -R owner/repo <pr>`
-2. Add comments: `gh pr-review review --add-comment -R owner/repo <pr> --review-id <PRR_...> --path <file> --line <num> --body "..."`
-3. Submit: `gh pr-review review --submit -R owner/repo <pr> --review-id <PRR_...> --event REQUEST_CHANGES --body "Summary"`
-
-## Important Notes
-
-- All IDs use GraphQL format (PRR_... for reviews, PRRT_... for threads)
-- Commands use pure GraphQL (no REST API fallbacks)
-- Empty arrays `[]` are returned when no data matches filters
-- The `--include-comment-node-id` flag adds PRRC_... IDs when needed
-- Thread replies are sorted by created_at ascending
-
-## Documentation Links
-
-- Usage guide: docs/USAGE.md
-- JSON schemas: docs/SCHEMAS.md
-- Agent workflows: docs/AGENTS.md
-- Blog post: https://agyn.io/blog/gh-pr-review-cli-agent-workflows
+```bash
+gh api -X POST /repos/{owner}/{repo}/pulls/71/comments/3035786540/replies \
+-f body="nevermind, I figured it out"
+```
