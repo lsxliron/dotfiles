@@ -57,7 +57,8 @@ wk.add({
 -- Copilot and Copilot CHat
 -- Reference: https://github.com/CopilotC-Nvim/CopilotChat.nvim?tab=readme-ov-file#chat-key-mappings
 vim.g.copilot_no_tab_map = false
-vim.keymap.set("i", "<S-Tab>", 'copilot#Accept("\\<S-Tab>")', { expr = true, replace_keycodes = false })
+-- vim.keymap.set("i", "<S-Tab>", 'copilot#Accept("\\<S-Tab>")', { expr = true, replace_keycodes = false })
+vim.keymap.set("i", "<Tab>", 'copilot#Accept("\\<Tab>")', { expr = true, replace_keycodes = false })
 -- Obsidian
 -- keymap.set("n", "<leader>ot", "<cmd>ObsidianTags<CR>", { desc = " List tags", group = "Obsidian" })
 -- keymap.set("n", "<leader>ot", "<cmd>ObsidianQuickSwitch<CR>", { desc = "List notes" })
