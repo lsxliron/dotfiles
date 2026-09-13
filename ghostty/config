@@ -7,9 +7,9 @@ theme = "Catppuccin Mocha"
 window-subtitle = working-directory
 clipboard-trim-trailing-spaces = true
 macos-titlebar-style = transparent
-copy-on-select = true
 shell-integration = bash
 copy-on-select = true
 keybind = global:ctrl+;=toggle_quick_terminal
+keybind = cmd+k=clear_screen
 command = /opt/homebrew/bin/bash
 
