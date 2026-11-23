@@ -14,6 +14,11 @@ keymap.set("c", "<C-l>", "<Right>")
 keymap.set("c", "<C-k>", "<Up>")
 keymap.set("c", "<C-j>", "<Down>")
 
+keymap.set("n", "<C-h>", "<Plug>(RexNavigateLeft)")
+keymap.set("n", "<C-l>", "<Plug>(RexNavigateRight)")
+keymap.set("n", "<C-k>", "<Plug>(RexNavigateUp)")
+keymap.set("n", "<C-j>", "<Plug>(RexNavigateDown)")
+
 -- resize window height
 keymap.set("n", "<D-Up>", "<cmd>resize +2<cr>")
 keymap.set("n", "<D-Down>", "<cmd>resize -2<cr>")
