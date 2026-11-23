@@ -1,5 +1,6 @@
 return {
   "christoomey/vim-tmux-navigator",
+  enabled = vim.env.TMUX ~= nil and vim.env.TMUX ~= "",
   init = function()
     vim.g.tmux_navigator_no_mappings = 1
   end,
