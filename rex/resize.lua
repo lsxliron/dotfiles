@@ -8,3 +8,4 @@ rex.bind("resize/j", "pane.resize", { direction = "down" })
 
 rex.bind("resize/enter", "client.mode.exit")
 rex.bind("resize/escape", "client.mode.exit")
+rex.bind("resize/q", "client.mode.exit")
