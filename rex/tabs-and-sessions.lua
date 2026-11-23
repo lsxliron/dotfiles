@@ -1,6 +1,6 @@
 -- Tabs management
 rex.bind("ctrl+s>c", "client.tab.new")
-rex.bind("ctrl+s>x", "client.tab.close")
+rex.bind("ctrl+s>shift+7", "client.tab.close")
 
 -- move between tabs
 rex.bind("ctrl+s>n", "client.tab.next")
